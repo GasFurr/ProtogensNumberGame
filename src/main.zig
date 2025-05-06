@@ -1,24 +1,18 @@
 const std = @import("std");
+const utils = @import("utils.zig");
 
-// Function to read a line from stdin (public API)
-pub fn readStdinLine(allocator: std.mem.Allocator) ![]const u8 {
-    const stdin = std.io.getStdIn();
-    var buffered_reader = std.io.bufferedReader(stdin.reader());
-    const reader = buffered_reader.reader();
-
-    // Read until newline with dynamic allocation
-    const line = try reader.readUntilDelimiterAlloc(allocator, '\n', std.math.maxInt(usize));
-
-    // Windows compatibility: Trim trailing \r
-    return std.mem.trimRight(u8, line, &[_]u8{'\r'});
-}
-
+// In zig declaration order doesn't matter.
+// pub - makes function visible to other modules.
 pub fn main() !void {
+    // declares basic page_allocator. Not production-grade,
+    // but just fine for this use.
     const allocator = std.heap.page_allocator;
 
-    // Use the function
-    const input = try readStdinLine(allocator);
-    defer allocator.free(input); // Cleanup
+    std.debug.print("\x1B[2J\x1B[H", .{}); // Clears screen and moves cursor to (0,0)
 
-    std.debug.print("You entered: '{s}'\n", .{input});
+    while (true) {
+        const input = try utils.readStdinLine(allocator);
+        // Cleanup even if we out of scope to early.
+        defer allocator.free(input);
+    }
 }
