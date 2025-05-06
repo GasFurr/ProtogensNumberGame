@@ -4,7 +4,7 @@
 
 This game is UNIX-only. I have no plans on making it cross-platform.
 
-## roadmap
+## Roadmap
 
 1. Cryptographically safe random generation
 2. Input handling (parsing numbers)
