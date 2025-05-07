@@ -6,6 +6,8 @@ zig-out/
 /debug/
 /build/
 /build-*/
+/release
 # Zig output files
 .zig-cache/
+*.tar.gz
 
