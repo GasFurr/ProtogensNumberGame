@@ -22,11 +22,11 @@ pub fn renderAscii(allocator: std.mem.Allocator, path: []const u8) !void {
     const file = try std.fs.cwd().openFile(path, .{ .mode = .read_only });
     defer file.close();
 
-    const art = try .file.readToEndAlloc(
+    const art = try file.readToEndAlloc(
         allocator,
         std.math.maxInt(usize),
     );
-    defer allocator.free();
+    defer allocator.free(art);
 
     std.debug.print("{s}\n", .{art});
 }

@@ -7,8 +7,9 @@ pub fn main() !void {
     // declares basic page_allocator. Not production-grade,
     // but just fine for this use.
     const allocator = std.heap.page_allocator;
-
     std.debug.print("\x1B[2J\x1B[H", .{}); // Clears screen and moves cursor to (0,0)
+
+    try utils.renderAscii(allocator, "resources/proto.txt");
 
     while (true) {
         const input = try utils.readStdinLine(allocator);
