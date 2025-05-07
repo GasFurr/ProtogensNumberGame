@@ -2,16 +2,8 @@
 
 > It's just a tiny CLI game written in ZIG.
 
-This game is UNIX-only. I have no plans on making it cross-platform.
-
-## Roadmap
-
-1. Cryptographically safe random generation
-2. Input handling (parsing numbers)
-3. Win conditions. Simple winning screen.
-4. File handling (ascii-art, scores saving)
-5. Welcome screen, main menu, difficulties.
-6. Win screen.
+This game is UNIX-only. I have no plans on making it cross-platform. It is decorated and just cool. Try it yourself.
+Screenshots:
 
 ## Be cool
 
