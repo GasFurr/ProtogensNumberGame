@@ -71,7 +71,7 @@ pub fn waitForEnterKeyPress() !void {
 
 pub fn parseMaxScore(allocator: std.mem.Allocator) ![]const u8 {
     // Opening score file
-    const file = try std.fs.cwd().openFile("resources/score.txt", .{ .mode = .read_only });
+    const file = try std.fs.cwd().openFile("resources/score", .{ .mode = .read_only });
     defer file.close(); // cleanup
 
     //Reading to end of allocator
@@ -80,9 +80,62 @@ pub fn parseMaxScore(allocator: std.mem.Allocator) ![]const u8 {
         std.math.maxInt(usize),
     );
 
+    _ = std.fmt.parseInt(u32, data, 10) catch {
+        std.debug.print("Warning: Invalid score data, resetting to 0\n", .{});
+        return try allocator.dupe(u8, "0");
+    };
+
     return data;
 }
 
-pub fn setMaxScore() u32 {}
+pub fn createFileIfNotExists(path: []const u8, default_content: []const u8) !void {
+    const dir_path = std.fs.path.dirname(path) orelse ".";
 
-pub fn resetMaxScore() void {}
+    // Create parent directories recursively
+    try std.fs.cwd().makePath(dir_path);
+
+    // Try to open existing file
+    const file = std.fs.cwd().openFile(path, .{ .mode = .read_only }) catch |err| switch (err) {
+        error.FileNotFound => {
+            // Create new file with default content
+            const new_file = try std.fs.cwd().createFile(path, .{});
+            defer new_file.close();
+            try new_file.writeAll(default_content);
+            return;
+        },
+        else => return err, // Propagate other errors
+    };
+
+    // Close file if it existed
+    defer file.close();
+}
+
+pub fn setMaxScore(score: u32, path: []const u8) !void {
+    try ensureDirectoryExists(path);
+
+    const file = try std.fs.cwd().createFile(path, .{ .truncate = true });
+    defer file.close();
+
+    var buffer: [12]u8 = undefined;
+    const score_str = try std.fmt.bufPrint(&buffer, "{d}", .{score});
+    try file.writeAll(score_str);
+}
+
+pub fn resetMaxScore(path: []const u8) !void {
+    try ensureDirectoryExists(path);
+
+    const file = try std.fs.cwd().createFile(path, .{ .truncate = true });
+    defer file.close();
+    try file.writeAll("0");
+}
+
+fn ensureDirectoryExists(path: []const u8) !void {
+    if (std.fs.path.dirname(path)) |dir_path| {
+        try std.fs.cwd().makePath(dir_path);
+    }
+}
+
+pub fn initializeResources() !void {
+    try createFileIfNotExists("resources/score", "0");
+    try createFileIfNotExists("resources/scoreDebug", "DEBUG SCORES\n");
+}
