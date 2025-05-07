@@ -7,13 +7,13 @@ pub fn main() !void {
     // declares basic page_allocator. Not production-grade,
     // but just fine for this use.
     const allocator = std.heap.page_allocator;
-    std.debug.print("\x1B[2J\x1B[H", .{}); // Clears screen and moves cursor to (0,0)
-
+    // Self explainatory
+    utils.clearTerminal();
+    // Rendering welcoming ascii art
     try utils.renderAscii(allocator, "resources/proto.txt");
 
-    while (true) {
-        const input = try utils.readStdinLine(allocator);
-        // Cleanup even if we out of scope to early.
-        defer allocator.free(input);
-    }
+    const number = try utils.random(1, 1000);
+    std.debug.print("Random number is: {}", .{number});
+    // Main game loop
+    while (true) {}
 }
