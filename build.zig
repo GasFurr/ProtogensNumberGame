@@ -18,7 +18,7 @@ pub fn build(b: *std.Build) void {
 
     // create executable binary target
     const executable = b.addExecutable(.{
-        .name = "Guessing Game",
+        .name = "Game",
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
