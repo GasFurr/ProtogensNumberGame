@@ -17,4 +17,16 @@ pub fn readStdinLine(allocator: std.mem.Allocator) ![]const u8 {
 // readStdinLine can return error union because ![]const u8
 
 // Read ASCII-art from file and write it on screen
-pub fn renderASCII() void {}
+pub fn renderASCII(allocator: std.mem.Allocator, path: []const u8) !void {
+    // Opening file on passed path.
+    const file = try std.fs.cwd().openFile(path, .{ .mode = .read_only });
+    defer file.close();
+
+    const art = try .file.readToEndAlloc(
+        allocator,
+        std.math.maxInt(usize),
+    );
+    defer allocator.free();
+
+    std.debug.print("{s}\n", .{art});
+}
