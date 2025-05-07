@@ -1,0 +1,6 @@
+(less = better)
+1.New game
+2.Back to menu
+3.Reset scores
+0.Exit
+

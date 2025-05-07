@@ -14,7 +14,6 @@ pub fn readStdinLine(allocator: std.mem.Allocator) ![]const u8 {
     // Windows compatibility: Trim trailing \r
     return std.mem.trimRight(u8, line, &[_]u8{'\r'});
 }
-// readStdinLine can return error union because ![]const u8
 
 // Read ASCII-art from file and write it on screen
 pub fn renderAscii(allocator: std.mem.Allocator, path: []const u8) !void {
@@ -61,3 +60,29 @@ pub fn random(at_least: u32, less_than: u32) !u32 {
     const generate = rand.intRangeLessThan(u32, at_least, less_than);
     return generate;
 }
+pub fn waitForEnterKeyPress() !void {
+    // Read until newline (Enter key)
+    const reader = std.io.getStdIn().reader();
+    while (true) {
+        const byte = try reader.readByte();
+        if (byte == '\n') break;
+    }
+}
+
+pub fn parseMaxScore(allocator: std.mem.Allocator) ![]const u8 {
+    // Opening score file
+    const file = try std.fs.cwd().openFile("resources/score.txt", .{ .mode = .read_only });
+    defer file.close(); // cleanup
+
+    //Reading to end of allocator
+    const data = try file.readToEndAlloc(
+        allocator,
+        std.math.maxInt(usize),
+    );
+
+    return data;
+}
+
+pub fn setMaxScore() u32 {}
+
+pub fn resetMaxScore() void {}

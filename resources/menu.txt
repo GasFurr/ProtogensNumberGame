@@ -1,5 +1,5 @@
 Welocome! I eat ram and you guess how much!
 Choose by writing the number!
 1. Start game
-2. Last & best guesses
+2. Scores
 0. Exit
