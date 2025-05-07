@@ -1,5 +1,5 @@
-Welocome! I eat ram and you guess how much!\n
-Choose by writing the number!\n
-1. Start game\n
-2. Last & best guesses\n
-0. Exit\n
+Welocome! I eat ram and you guess how much!
+Choose by writing the number!
+1. Start game
+2. Last & best guesses
+0. Exit
