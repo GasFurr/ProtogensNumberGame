@@ -15,3 +15,6 @@ pub fn readStdinLine(allocator: std.mem.Allocator) ![]const u8 {
     return std.mem.trimRight(u8, line, &[_]u8{'\r'});
 }
 // readStdinLine can return error union because ![]const u8
+
+// Read ASCII-art from file and write it on screen
+pub fn renderASCII() void {}

@@ -25,7 +25,9 @@ pub fn build(b: *std.Build) void {
     });
 
     // Make target avaliable for installation
-    b.installArtifact(executable);
+    const install = b.addInstallArtifact(executable, .{ .dest_dir = .{ .override = .{ .custom = "../" } } });
+
+    b.default_step.dependOn(&install.step);
 
     const run_cmd = b.addRunArtifact(executable);
     run_cmd.step.dependOn(b.getInstallStep());

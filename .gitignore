@@ -1,3 +1,6 @@
+*
+!/**/
+!*.*
 zig-out/
 /release/
 /debug/
@@ -5,3 +8,4 @@ zig-out/
 /build-*/
 # Zig output files
 .zig-cache/
+
