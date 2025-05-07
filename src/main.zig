@@ -65,7 +65,8 @@ fn mainGameLoop() !void {
                 // Menu
 
                 if (std.mem.eql(u8, input, "0")) {
-                    break;
+                    main_loop = false;
+                    return;
                 } else if (std.mem.eql(u8, input, "1")) {
                     current_state = GameState.DifficultyScreen;
                 } else if (std.mem.eql(u8, input, "2")) {
@@ -86,9 +87,9 @@ fn mainGameLoop() !void {
                 } else {
                     std.debug.print("Your last steps count:{} \n", .{score});
                 }
-                max_score = try utils.parseMaxScore(allocator);
-                defer allocator.free(max_score);
-                std.debug.print("Your least steps count: {s}\n", .{max_score});
+                const current_max = try utils.parseMaxScore(allocator);
+                defer allocator.free(current_max);
+                std.debug.print("Your least steps count: {s}\n", .{current_max});
                 std.debug.print("Press enter to go back...\n", .{});
                 if (debug == 1) {
                     std.debug.print("Debug score:", .{});
@@ -125,11 +126,11 @@ fn mainGameLoop() !void {
             },
             GameState.WinScreen => {
                 // Drawing art + info + art in 3 stages
-                max_score = try utils.parseMaxScore(allocator);
-                defer allocator.free(max_score);
+                const current_max = try utils.parseMaxScore(allocator);
+                defer allocator.free(current_max);
                 try utils.renderAscii(allocator, "resources/winart.txt"); //image
                 std.debug.print("Your made {} guesses!\n", .{score});
-                std.debug.print("Least guesses {s}\n", .{max_score});
+                std.debug.print("Least guesses {s}\n", .{current_max});
                 try utils.renderAscii(allocator, "resources/winart2.txt"); //text
                 // Input + deallocation
                 const input = try utils.readStdinLine(allocator);
