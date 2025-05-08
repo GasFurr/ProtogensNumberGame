@@ -1,3 +1,4 @@
+// Imports and abbreviations
 const std = @import("std");
 const utils = @import("utils.zig");
 const print = std.debug.print;
@@ -205,12 +206,17 @@ pub fn gameStarted(difficulty: Difficulty) !void {
             game_loop = true;
         },
         Difficulty.Medium => {
+            print("I will create, number bigger this time\n", .{});
+            // Calls utils.random to generate number
+            number = try utils.random(1, 1001);
+            // Sleeps for roughly 1.0 seconds
+            std.time.sleep(1000311000);
+            //starting game loop
+            print("You won't win this time!\n", .{});
             game_loop = true;
-            // todo: medium difficulty
         },
         Difficulty.Hard => {
             game_loop = true;
-            // todo: hard difficulty
         },
         Difficulty.Chromium => {
             game_loop = false;
