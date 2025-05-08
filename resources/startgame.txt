@@ -12,7 +12,7 @@
 ⢀⠠⠔⠒⠈⣉⣉⣉⣉⠉⠙⠛⠿⢿⣿⣿⣿⣿⣟⣋⠳⣾⠀⠀⠀
 ⣡⣶⠶⠟⠛⠛⠉⠉⠉⠀⠀⠀⠀⠀⠈⠙⠢⣝⣿⣏⡳⠈⣑⢤⡀
 What difficulty you want to play?
-1. Easy
-2. Medium
-3. Hard
-4. Chromium
+1. Easy (1-100)
+2. Medium (1-1000)
+3. Hard (1-10000)
+4. Chromium (It doesn't matter - you will loose.)
