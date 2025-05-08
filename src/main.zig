@@ -166,8 +166,7 @@ fn MenuLoop() !void {
                 const input = try utils.readStdinLine(allocator);
                 defer allocator.free(input);
                 // Comparing input. If it's 'Y' or 'y' - enables debug mode
-                // not sure - needs testing
-                if (strcompare(u8, input, 'Y' or 'y')) {
+                if (strcompare(u8, input, "Y") or strcompare(u8, input, "y")) {
                     debug = 1;
                     current_state = GameState.InMenu;
                 } else { // If it's anything else just do nothing
