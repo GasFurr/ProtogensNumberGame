@@ -131,7 +131,7 @@ fn MenuLoop() !void {
             // Is GameState - Game Started?
             GameState.GameStarted => {
                 utils.clearTerminal();
-                try GameStarted(current_difficulty);
+                try gameStarted(current_difficulty);
             },
             // Is GameState - Win Screen?
             GameState.WinScreen => {
@@ -165,11 +165,11 @@ fn MenuLoop() !void {
                 print("Do you want to enter debug mode?\n [Y/N]", .{});
                 const input = try utils.readStdinLine(allocator);
                 defer allocator.free(input);
-
-                if (strcompare(u8, input, "Y")) {
+                // Comparing input. If it's 'Y' - enables debug mode
+                if (strcompare(u8, input, 'Y' or 'y')) {
                     debug = 1;
                     current_state = GameState.InMenu;
-                } else {
+                } else { // If it's anything else just do nothing
                     debug = 0;
                     current_state = GameState.InMenu;
                 }
@@ -185,92 +185,121 @@ fn MenuLoop() !void {
     }
 }
 // Real main game loop lol.
-pub fn GameStarted(difficulty: Difficulty) !void {
+pub fn gameStarted(difficulty: Difficulty) !void {
     // Resetting score
     score = 0;
     debug_score = 0;
     // Creating variable for number.
     var number: u32 = 0;
-    // always starts for now.
-    if (true) {
-        utils.clearTerminal();
-        switch (difficulty) {
-            Difficulty.Easy => {
-                print("Wait a second, i am thinking...\n", .{});
-                number = try utils.random(1, 101);
-                std.time.sleep(1254311000);
-                print("Yeah, i am ready.\n", .{});
-                game_loop = true;
-            },
-            Difficulty.Medium => {
-                game_loop = true;
-            },
-            Difficulty.Hard => {
-                game_loop = true;
-            },
-            Difficulty.Chromium => {
-                game_loop = false;
-                try ChromiumDifficulty();
-                number = 1;
-            },
-        }
-
-        if (debug == 1) {
-            print("DEBUG: The number is {}\n", .{number});
-        } else if (number == 0) {
-            utils.clearTerminal();
-            current_state = GameState.unexpected;
-            return;
-        } else {
-            print("Let's start!\n", .{});
-        }
-        // Game loop.
-        while (game_loop == true) {
-            score += 1;
-            if (debug == 1) {
-                debug_score += 1;
-            }
-            print("Your guess:", .{});
-            const input = try utils.readStdinLine(allocator);
-            defer allocator.free(input);
-
-            const guess = std.fmt.parseInt(u32, input, 10) catch {
-                print("\nIt's not a number! (at least it's hard for me to find it)", .{});
-                print("\nI will not count that as guess. Your score is still {}\n", .{score});
-                score -= 1; // Only count valid attempts
-                continue;
-            };
-
-            if (guess == number) {
-                utils.clearTerminal();
-                if (score == 1) {
-                    print("\nWow, first try!\n", .{});
-                } else {
-                    print("\nYou win this time.\n", .{});
-                }
-                print("\nThe number was {}\n", .{number});
-
-                // Update max score if needed
-                const current_max = try std.fmt.parseInt(u32, max_score, 10);
-                if ((score < current_max or current_max == 0) and debug == 0) {
-                    try utils.setMaxScore(score, "resources/score");
-                    new_max_score = true;
-                }
-
-                current_state = GameState.WinScreen;
-                game_loop = false;
-                main_loop = true;
-                return;
-            } else if (guess > number) {
-                print("\nI'm not eating that much! >w<\n", .{});
-                continue;
-            } else if (guess < number) {
-                print("\nI would starve if it was true! owo\n", .{});
-                continue;
-            }
-        }
+    utils.clearTerminal();
+    // Difficulty switch;
+    switch (difficulty) {
+        Difficulty.Easy => {
+            print("Wait a second, i am thinking...\n", .{});
+            // Calls utils.random to generate number
+            number = try utils.random(1, 101);
+            // Sleeps for roughly 1.2 seconds
+            std.time.sleep(1254311000);
+            // Starting game loop
+            print("Yeah, i am ready.\n", .{});
+            game_loop = true;
+        },
+        Difficulty.Medium => {
+            game_loop = true;
+            // todo: medium difficulty
+        },
+        Difficulty.Hard => {
+            game_loop = true;
+            // todo: hard difficulty
+        },
+        Difficulty.Chromium => {
+            game_loop = false;
+            try ChromiumDifficulty();
+            number = 1;
+        },
     }
 
+    // Check for debugging:
+    if (debug == 1) {
+
+        // If debug it will write the generated number;
+        print("DEBUG: The number is {}\n", .{number});
+    } else if (number == 0) {
+
+        // If number == 0 means it's not generated,
+        // so throws GameState unexpected and returns to MenuLoop;
+        utils.clearTerminal();
+        current_state = GameState.unexpected;
+        return;
+    } else {
+        // If everything fine it starts the game.
+        print("Let's start!\n", .{});
+    }
+
+    // Game loop.
+    while (game_loop == true) {
+        // Updates score every move
+        // (including first one so score can't be less than 1)
+        score += 1; // Todo - rework debug score system.
+        if (debug == 1) {
+            debug_score += 1;
+        }
+        // Waiting for the guess
+        print("Your guess:", .{});
+        const input = try utils.readStdinLine(allocator);
+        defer allocator.free(input);
+        // Converting guess to intager.
+        const guess = std.fmt.parseInt(u32, input, 10) catch {
+            // If there's words in the guess - it will ignore it.
+            print("\nIt's not a number! (at least it's hard for me to find it)", .{});
+            print("\nI will not count that as guess. Your score is still {}\n", .{score});
+            score -= 1; // Only count valid attempts
+            continue;
+        };
+        // If guess is fine - check it.
+        if (guess == number) {
+            // When guess equals number
+            utils.clearTerminal();
+
+            if (score == 1) {
+                // When it's first move
+                print("\nWow, first try!\n", .{});
+            } else {
+                // When it's any other time
+                print("\nYou win this time.\n", .{});
+            }
+            // Prints the number
+            print("\nThe number was {}\n", .{number});
+
+            // Update max score if needed
+            const current_max = try std.fmt.parseInt(u32, max_score, 10);
+            // Settin up current_max, try to parse intager from it.
+            if ((score < current_max or current_max == 0) and debug == 0) {
+                // Try set max score in the file
+                try utils.setMaxScore(score, "resources/score");
+                // Set's new_max_score true. For now not used?
+                new_max_score = true;
+            }
+
+            // Throws player to win screen, stops game loop, checks again if
+            // main loop is active (and activating it)
+            // and then return from function.
+            current_state = GameState.WinScreen;
+            game_loop = false;
+            main_loop = true;
+            return;
+        } else if (guess > number) {
+            // If guess is bigger than the number
+            print("\nI'm not eating that much! >w<\n", .{});
+            continue; // Jumping to next round of the loop
+        } else if (guess < number) {
+            // If guess is lower than the number
+            print("\nI would starve if it was true! owo\n", .{});
+            continue; // And jumping to next round again
+        }
+    }
+    // Making sure that game loop stopped, main loop activated
+    // and setting game state "in menu"
     defer {
         game_loop = false;
         main_loop = true;
@@ -278,6 +307,7 @@ pub fn GameStarted(difficulty: Difficulty) !void {
     }
 }
 
+// Experimental ultra-hard difficulty, not ready for now.
 pub fn ChromiumDifficulty() !void {
     print("In work...", .{});
     print("   o w o   ", .{});
