@@ -17,7 +17,8 @@
 
 > It's just a tiny CLI game written in ZIG.
 
-This game is UNIX-only. I have no plans on making it cross-platform. It is decorated and just cool. Try it yourself.
+This game is UNIX-only. I have no plans on making it cross-platform. It is decorated and just cool.
+I have plans on chromium gamemode, but working on different project for now.
 Screenshots:
 Building with one command!
 ![image](https://github.com/user-attachments/assets/8ad4534d-c247-46d6-a736-1e17d6f9c591)
